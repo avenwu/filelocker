@@ -1,6 +1,7 @@
 package avenwu.net.filelocker;
 
 import android.app.Application;
+import android.os.Environment;
 import android.test.ApplicationTestCase;
 import android.util.Log;
 
@@ -77,5 +78,47 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         return (byte) (c - '1');
     }
 
+    public void testVideoEncode() throws Exception {
+        InputStream inputStream = getContext().getResources().getAssets().open("sample_video.mp4");
+        File desFile = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES), "sample_video.mp4.xyz");
+        Log.d("VIDEO_ENCODE", desFile.getAbsolutePath());
+        FileOutputStream outputStream = new FileOutputStream(desFile);
 
+        byte[] buffer = new byte[1024 * 8];
+        int length = 0;
+        while ((length = inputStream.read(buffer)) > 0) {
+            for (int i = 0; i < length; i++) {
+                byte c = buffer[i];
+                byte d = encode(c);
+                buffer[i] = d;
+            }
+            outputStream.write(buffer, 0, length);
+        }
+        outputStream.close();
+        inputStream.close();
+        assertTrue(desFile.exists());
+        assertTrue(desFile.length() > 0);
+    }
+
+    public void testVideoDecode() throws Exception {
+        File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES), "sample_video.mp4.xyz");
+        FileInputStream inputStream = new FileInputStream(file);
+        File desFile = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES), "sample_video_decoded.mp4");
+        FileOutputStream outputStream = new FileOutputStream(desFile);
+        byte[] buffer = new byte[1024 * 8];
+        int length = 0;
+        while ((length = inputStream.read(buffer)) > 0) {
+            for (int i = 0; i < length; i++) {
+                byte c = buffer[i];
+                byte d = decode(c);
+                buffer[i] = d;
+            }
+            outputStream.write(buffer, 0, length);
+        }
+        outputStream.close();
+        inputStream.close();
+        assertTrue(desFile.exists());
+        assertTrue(desFile.length() > 0);
+
+    }
 }
