@@ -1,5 +1,6 @@
 package avenwu.net.filelocker
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -19,10 +20,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-            }
+        fab.setOnClickListener({ v ->
+            startActivity(Intent(v.context, LockFileActivity::class.java))
         })
         val label = findViewById(R.id.tv_label) as TextView
         label.text = intent.dataString
