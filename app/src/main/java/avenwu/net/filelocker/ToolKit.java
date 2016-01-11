@@ -122,4 +122,39 @@ public class ToolKit {
             }
         }
     }
+
+    public static String getReadableSize(double bytes) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (bytes < ONE_KB) {
+            fileSizeString = df.format(bytes) + "B";
+        } else if (bytes < ONE_MB) {
+            fileSizeString = df.format(bytes / ONE_KB) + "KB";
+        } else if (bytes < ONE_GB) {
+            fileSizeString = df.format(bytes / ONE_MB) + "MB";
+        } else {
+            fileSizeString = df.format(bytes / ONE_GB) + "G";
+        }
+        return fileSizeString;
+    }
+
+    /**
+     * The number of bytes in a kilobyte.
+     */
+    public static final long ONE_KB = 1024;
+
+    /**
+     * The number of bytes in a megabyte.
+     */
+    public static final long ONE_MB = ONE_KB * ONE_KB;
+
+    /**
+     * The number of bytes in a 50 MB.
+     */
+    public static final long FIFTY_MB = ONE_MB * 50;
+
+    /**
+     * The number of bytes in a gigabyte.
+     */
+    public static final long ONE_GB = ONE_KB * ONE_MB;
 }

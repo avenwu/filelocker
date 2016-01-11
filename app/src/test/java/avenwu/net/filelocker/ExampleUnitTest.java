@@ -9,7 +9,9 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void testSubString() throws Exception {
+        String src = "xyz.abc";
+        String sub = src.substring(0, src.indexOf(".abc"));
+        assertTrue(sub.equals("xyz"));
     }
 }
