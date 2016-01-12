@@ -10,27 +10,29 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlin.text.endsWith
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseToolbarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar.navigationIcon = null
         setSupportActionBar(toolbar)
+        supportActionBar.setDisplayShowHomeEnabled(false)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener({ v ->
-            intent.dataString?.let {
-                var uri = it
-                var i: Intent
-                if (uri.endsWith(EXTENSION)) {
-                    i = Intent(v.context, DecodeFileActivity::class.java)
-                } else {
-                    i = Intent(v.context, EncodeFileActivity::class.java)
-                }
-                i.setData(Uri.parse(uri))
-                startActivity(i)
+        intent.dataString?.let {
+            var uri = it
+            var i: Intent
+            if (uri.endsWith(EXTENSION)) {
+                i = Intent(this, DecodeFileActivity::class.java)
+            } else {
+                i = Intent(this, EncodeFileActivity::class.java)
             }
+            i.setData(Uri.parse(uri))
+            startActivity(i)
+        }
+        findViewById(R.id.btn_show_encode_list).setOnClickListener({
+            startActivity(Intent(this, EncodedListActivity::class.java))
         })
     }
 
@@ -40,18 +42,11 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(Intent(this, EncodedListActivity::class.java))
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_settings) {
+            //            startActivity(Intent(this, EncodedListActivity::class.java))
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 }

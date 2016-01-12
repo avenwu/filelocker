@@ -1,6 +1,8 @@
 package avenwu.net.filelocker
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
@@ -53,6 +55,14 @@ public fun getEncodeFileList(): Array<File>? {
     var dir = getPublicDir()
     var files = dir.listFiles({ dir, fileName ->
         fileName.endsWith(EXTENSION)
+    })
+    return files;
+}
+
+public fun getNormalFileList(): Array<File> ? {
+    var dir = getPublicDir()
+    var files = dir.listFiles({ dir, fileName ->
+        !fileName.endsWith(EXTENSION)
     })
     return files;
 }
@@ -130,7 +140,7 @@ abstract class Task(progress: (Long?, Float?) -> Unit, result: (Result?) -> Unit
     }
 
     override fun onProgressUpdate(vararg values: Long?) {
-        progressBlock.invoke(values[0], values[0]?.div(values[1] as Float))
+        progressBlock.invoke(values[0], values[0]?.div(values[1]?.toFloat() ?: 1f))
     }
 
     override fun onPostExecute(result: Result?) {
@@ -141,6 +151,8 @@ abstract class Task(progress: (Long?, Float?) -> Unit, result: (Result?) -> Unit
 }
 
 public data class Result(var success: Boolean, var msg: String);
+
+public data class FileItem(val name: String, val encoded: Boolean = false, val type: Int = 0)
 
 val ONE_KB: Long = 1024
 val ONE_MB = ONE_KB * ONE_KB
@@ -180,10 +192,23 @@ public fun getNormalMime(extension: String): String {
 
 fun Activity.getFile(path: String): File {
     try {
-        var convertedPath = ContentUriToFile.getPath(this, Uri.parse(path))
-        return File(convertedPath)
+        ContentUriToFile.getPath(this, Uri.parse(path))?.let {
+            return File(it)
+        }
     } catch(e: Exception) {
         e.printStackTrace()
     }
     return File(path)
+}
+
+fun Context.openFolder(): Boolean {
+    var intent = Intent(Intent.ACTION_GET_CONTENT);
+    intent.setDataAndType(Uri.fromFile(getPublicDir()), "*/*");
+
+    if (intent.resolveActivityInfo(packageManager, 0) != null) {
+        startActivity(intent);
+        return true
+    } else {
+        return false
+    }
 }

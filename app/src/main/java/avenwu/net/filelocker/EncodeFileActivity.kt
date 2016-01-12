@@ -5,23 +5,26 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.Button
+import android.widget.CheckedTextView
 import android.widget.ProgressBar
 import android.widget.TextView
-import java.io.File
-import java.net.URI
 import java.util.*
+import kotlin.text.lastIndexOf
+import kotlin.text.substring
+import kotlin.text.toLowerCase
 
 /**
  * Created by aven on 1/8/16.
  */
-class EncodeFileActivity : AppCompatActivity() {
+class EncodeFileActivity : BaseToolbarActivity() {
     var mSrcFileLabel: TextView? = null
     var mDesFileLabel: TextView? = null
     var mProgressView: ProgressBar? = null
     var mButtonConfirm: Button? = null
+    var mDeleteCheckBox: CheckedTextView? = null
     var mTaskList = ArrayList<Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +46,12 @@ class EncodeFileActivity : AppCompatActivity() {
 
             var size = getReadableSize(tmp.length().toDouble())
             mSrcFileLabel?.text = tmp.absolutePath + "($size)"
-
+            mSrcFileLabel?.setOnClickListener({
+                var viewFileIntent = Intent(Intent.ACTION_VIEW)
+                var extension = tmp.absolutePath.substring(tmp.absolutePath.lastIndexOf(".") + 1, tmp.absolutePath.length);
+                viewFileIntent.setDataAndType(Uri.fromFile(tmp), getNormalMime(extension.toLowerCase()))
+                startActivity(viewFileIntent)
+            })
             mButtonConfirm?.setOnClickListener({
                 var tmpSrc = getFile(uri)
                 var des = getEncodeFile(tmpSrc.name)
@@ -55,6 +63,7 @@ class EncodeFileActivity : AppCompatActivity() {
                         if (result.success) {
                             mProgressView?.progress = 100
                             var size = getReadableSize(des.length().toDouble());
+                            mDesFileLabel?.visibility = View.VISIBLE
                             mDesFileLabel?.text = des.absolutePath + "($size})"
                             alert("Encode completed!")
                         } else {
@@ -62,6 +71,11 @@ class EncodeFileActivity : AppCompatActivity() {
                         }
                     }
                 }))
+            })
+
+            mDeleteCheckBox = findViewById(R.id.checkbox_delete) as CheckedTextView
+            mDeleteCheckBox?.setOnClickListener({
+                mDeleteCheckBox?.toggle()
             })
         }
     }

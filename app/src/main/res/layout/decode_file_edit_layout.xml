@@ -7,19 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".LockFileActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/toolbar_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,27 +22,31 @@
         tools:context=".LockFileActivity">
 
         <TextView
+            style="@style/ItemStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="文件"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_file_name"
+            style="@style/ItemStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:gravity="center_vertical"
-            android:minHeight="?android:attr/listPreferredItemHeightSmall"
             tools:text="/mnt/sdcard/xxx.txt" />
 
         <TextView
             android:id="@+id/tv_file_name_encode"
+            style="@style/ItemStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:gravity="center_vertical"
-            android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            tools:text="/mnt/sdcard/xxx.txt" />
+            android:visibility="gone"
+            tools:text="/mnt/sdcard/xxx.txt"
+            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -62,13 +54,19 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeightSmall"
             android:max="100"
-            android:progress="40" />
+            tools:progress="40"
+            android:progressTint="@android:color/white" />
 
         <Button
             android:id="@+id/btn_translate"
+            style="@style/ItemStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="解锁" />
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:gravity="center"
+            android:text="解锁"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

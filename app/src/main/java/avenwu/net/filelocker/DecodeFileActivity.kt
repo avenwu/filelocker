@@ -1,25 +1,24 @@
 package avenwu.net.filelocker
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import java.io.File
-import java.net.URI
 import java.util.*
-import kotlin.text.*
+import kotlin.text.lastIndexOf
+import kotlin.text.substring
+import kotlin.text.toLowerCase
 
 /**
  * Created by aven on 1/8/16.
  */
-class DecodeFileActivity : AppCompatActivity() {
+class DecodeFileActivity : BaseToolbarActivity() {
     var mSrcFileLabel: TextView? = null
     var mDesFileLabel: TextView? = null
     var mProgressView: ProgressBar? = null
@@ -57,6 +56,7 @@ class DecodeFileActivity : AppCompatActivity() {
                             if (result.success) {
                                 mProgressView?.progress = 100
                                 var size = getReadableSize(des.length().toDouble());
+                                mDesFileLabel?.visibility = View.VISIBLE
                                 mDesFileLabel?.text = des.absolutePath + "($size})"
                                 alert("Decode completed!")
                                 mDesFileLabel?.setOnClickListener({
