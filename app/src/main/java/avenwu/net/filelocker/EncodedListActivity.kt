@@ -1,6 +1,5 @@
 package avenwu.net.filelocker
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
@@ -52,12 +51,9 @@ public class EncodedListActivity : AppCompatActivity() {
             }
         }
 
-        var task = object : AsyncTask<Context, Void, Array<File>>() {
-            override fun doInBackground(vararg params: Context?): Array<File>? {
-                params[0]?.let {
-                    return getEncodeFileList(it)
-                }
-                return null
+        var task = object : AsyncTask<Void, Void, Array<File>>() {
+            override fun doInBackground(vararg params: Void?): Array<File>? {
+                return getEncodeFileList()
             }
 
             override fun onPostExecute(result: Array<File>?) {
@@ -65,7 +61,7 @@ public class EncodedListActivity : AppCompatActivity() {
                 recyclerView.adapter.notifyDataSetChanged()
             }
         }
-        AsyncTaskCompat.executeParallel(task, this)
+        AsyncTaskCompat.executeParallel(task)
         mTaskList.add(task)
     }
 

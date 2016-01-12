@@ -1,6 +1,7 @@
 package avenwu.net.filelocker
 
-import android.content.Context
+import android.app.Activity
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
 import android.support.v4.os.AsyncTaskCompat
@@ -8,6 +9,7 @@ import android.util.Base64
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.collections.toString
+import kotlin.text.contentEquals
 import kotlin.text.endsWith
 import kotlin.text.indexOf
 import kotlin.text.toByteArray
@@ -17,25 +19,38 @@ import kotlin.text.toByteArray
  */
 
 val EXTENSION = ".encode"
+val FOLDER = "fileLocker"
 
-public fun getEncodeFile(context: Context, fileName: String): File {
+public fun getPublicDir(): File {
+    var dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+    if (!dir.exists()) {
+        dir.mkdir()
+    }
+    var fileLocker = File(dir, FOLDER);
+    if (!fileLocker.exists()) {
+        fileLocker.mkdir()
+    }
+    return fileLocker
+}
+
+public fun getEncodeFile(fileName: String): File {
     var encodeName = Base64.encodeToString(fileName.toByteArray(), Base64.DEFAULT) + EXTENSION
-    var des = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), encodeName)
+    var des = File(getPublicDir(), encodeName)
     return des
 }
 
-public fun getDecodeFile(context: Context, fileName: String): File? {
+public fun getDecodeFile(fileName: String): File? {
     var index = fileName.indexOf(EXTENSION)
     if (index > -1) {
         var decodeName = Base64.decode(fileName.subSequence(0, index).toString(), Base64.DEFAULT)
-        var des = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), decodeName.toString(Charset.defaultCharset()))
+        var des = File(getPublicDir(), decodeName.toString(Charset.defaultCharset()))
         return des
     }
     return null
 }
 
-public fun getEncodeFileList(context: Context): Array<File>? {
-    var dir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+public fun getEncodeFileList(): Array<File>? {
+    var dir = getPublicDir()
     var files = dir.listFiles({ dir, fileName ->
         fileName.endsWith(EXTENSION)
     })
@@ -127,6 +142,10 @@ abstract class Task(progress: (Long?, Float?) -> Unit, result: (Result?) -> Unit
 
 public data class Result(var success: Boolean, var msg: String);
 
+val ONE_KB: Long = 1024
+val ONE_MB = ONE_KB * ONE_KB
+val ONE_GB = ONE_KB * ONE_MB
+
 public fun getReadableSize(bytes: Double): String {
     val df = java.text.DecimalFormat("#.00")
     var fileSizeString = ""
@@ -142,22 +161,29 @@ public fun getReadableSize(bytes: Double): String {
     return fileSizeString
 }
 
-/**
- * The number of bytes in a kilobyte.
- */
-val ONE_KB: Long = 1024
 
-/**
- * The number of bytes in a megabyte.
- */
-val ONE_MB = ONE_KB * ONE_KB
+public fun getNormalMime(extension: String): String {
+    var images = arrayOf("png", "jpg", "jpeg", "git", "bmp")
+    for (i in images) {
+        if (i.contentEquals(extension)) {
+            return "image/$i"
+        }
+    }
+    var videos = arrayOf("mp4", "avi", "rmvb", "rm", "3gp")
+    for (i in videos) {
+        if (i.contentEquals(extension)) {
+            return "video/$i"
+        }
+    }
+    return "*/$extension"
+}
 
-/**
- * The number of bytes in a 50 MB.
- */
-val FIFTY_MB = ONE_MB * 50
-
-/**
- * The number of bytes in a gigabyte.
- */
-val ONE_GB = ONE_KB * ONE_MB
+fun Activity.getFile(path: String): File {
+    try {
+        var convertedPath = ContentUriToFile.getPath(this, Uri.parse(path))
+        return File(convertedPath)
+    } catch(e: Exception) {
+        e.printStackTrace()
+    }
+    return File(path)
+}

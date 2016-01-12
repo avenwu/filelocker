@@ -14,4 +14,12 @@ public class ExampleUnitTest {
         String sub = src.substring(0, src.indexOf(".abc"));
         assertTrue(sub.equals("xyz"));
     }
+
+    @Test
+    public void testExtension() throws Exception {
+        String path = "xxx.png";
+        String extension = path.substring(path.lastIndexOf(".") + 1, path.length()).toLowerCase();
+        assertTrue("png".equals(extension));
+
+    }
 }

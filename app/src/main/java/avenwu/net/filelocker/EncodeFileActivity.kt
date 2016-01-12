@@ -1,5 +1,7 @@
 package avenwu.net.filelocker
 
+import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -33,7 +35,7 @@ class EncodeFileActivity : AppCompatActivity() {
         mButtonConfirm = findViewById(R.id.btn_translate) as Button
 
         intent.dataString?.let { uri ->
-            var tmp = File(URI.create(uri))
+            var tmp = getFile(uri)
             if (!tmp.exists()) {
                 alert("File not exist!!($uri)")
                 return
@@ -43,8 +45,8 @@ class EncodeFileActivity : AppCompatActivity() {
             mSrcFileLabel?.text = tmp.absolutePath + "($size)"
 
             mButtonConfirm?.setOnClickListener({
-                var tmpSrc = File(URI.create(uri))
-                var des = getEncodeFile(it.context, tmpSrc.name)
+                var tmpSrc = getFile(uri)
+                var des = getEncodeFile(tmpSrc.name)
                 mDesFileLabel?.text = des.absolutePath
                 mTaskList.add(encode(tmpSrc, des, { bytes, percent ->
                     mProgressView?.progress = percent?.times(100)?.toInt()

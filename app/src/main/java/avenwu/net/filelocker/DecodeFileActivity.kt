@@ -1,5 +1,8 @@
 package avenwu.net.filelocker
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -11,7 +14,7 @@ import android.widget.TextView
 import java.io.File
 import java.net.URI
 import java.util.*
-import kotlin.text.startsWith
+import kotlin.text.*
 
 /**
  * Created by aven on 1/8/16.
@@ -45,7 +48,7 @@ class DecodeFileActivity : AppCompatActivity() {
 
             mButtonConfirm?.setOnClickListener({
                 var tmpSrc = getFile(uri)
-                getDecodeFile(it.context, tmpSrc.name)?.let { des ->
+                getDecodeFile(tmpSrc.name)?.let { des ->
                     mDesFileLabel?.text = des.absolutePath
                     mTaskList.add(decode(tmpSrc, des, { bytes, percent ->
                         mProgressView?.progress = percent?.times(100)?.toInt()
@@ -56,6 +59,12 @@ class DecodeFileActivity : AppCompatActivity() {
                                 var size = getReadableSize(des.length().toDouble());
                                 mDesFileLabel?.text = des.absolutePath + "($size})"
                                 alert("Decode completed!")
+                                mDesFileLabel?.setOnClickListener({
+                                    var viewFileIntent = Intent(Intent.ACTION_VIEW)
+                                    var extension = des.absolutePath.substring(des.absolutePath.lastIndexOf(".") + 1, des.absolutePath.length);
+                                    viewFileIntent.setDataAndType(Uri.fromFile(des), getNormalMime(extension.toLowerCase()))
+                                    startActivity(viewFileIntent)
+                                })
                             } else {
                                 alert("Decode failed!!(${result.msg})")
                             }
@@ -63,14 +72,6 @@ class DecodeFileActivity : AppCompatActivity() {
                     }))
                 }
             })
-        }
-    }
-
-    fun getFile(path: String): File {
-        if (path.startsWith("file://")) {
-            return File(URI.create(path))
-        } else {
-            return File(path)
         }
     }
 
