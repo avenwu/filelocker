@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".LockFileActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:weightSum="1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".LockFileActivity">
+
+        <TextView
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="文件"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_file_name"
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            tools:text="/mnt/sdcard/xxx.txt" />
+
+        <TextView
+            android:id="@+id/tv_file_name_encode"
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:visibility="gone"
+            tools:text="/mnt/sdcard/xxx.txt"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/listPreferredItemHeightSmall"
+            android:max="100"
+            tools:progress="40"
+            android:progressTint="@android:color/white" />
+
+        <TextView
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="参数"
+            android:textStyle="bold" />
+
+        <CheckedTextView
+            android:id="@+id/checkbox_delete"
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:gravity="center_vertical"
+            android:text="加锁后删除源文件"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+        <Button
+            android:id="@+id/btn_translate"
+            style="@style/ItemStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:gravity="center"
+            android:text="加锁"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
