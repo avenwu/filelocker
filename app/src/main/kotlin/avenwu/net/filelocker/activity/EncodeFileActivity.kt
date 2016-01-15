@@ -1,4 +1,4 @@
-package avenwu.net.filelocker
+package avenwu.net.filelocker.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.CheckedTextView
 import android.widget.ProgressBar
 import android.widget.TextView
+import avenwu.net.filelocker.*
+import avenwu.net.filelocker.util.*
 import java.util.*
 import kotlin.text.lastIndexOf
 import kotlin.text.substring

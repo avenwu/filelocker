@@ -1,4 +1,4 @@
-package avenwu.net.filelocker
+package avenwu.net.filelocker.util
 
 import android.app.Activity
 import android.content.Context
@@ -8,8 +8,10 @@ import android.os.AsyncTask
 import android.os.Environment
 import android.support.v4.os.AsyncTaskCompat
 import android.util.Base64
+import avenwu.net.filelocker.ContentUriToFile
 import java.io.*
 import java.nio.charset.Charset
+import java.text.DecimalFormat
 import kotlin.collections.toString
 import kotlin.text.contentEquals
 import kotlin.text.endsWith
@@ -52,16 +54,14 @@ public fun getDecodeFile(fileName: String): File? {
 }
 
 public fun getEncodeFileList(): Array<File>? {
-    var dir = getPublicDir()
-    var files = dir.listFiles({ dir, fileName ->
+    var files = getPublicDir().listFiles({ dir, fileName ->
         fileName.endsWith(EXTENSION)
     })
     return files;
 }
 
 public fun getNormalFileList(): Array<File> ? {
-    var dir = getPublicDir()
-    var files = dir.listFiles({ dir, fileName ->
+    var files = getPublicDir().listFiles({ dir, fileName ->
         !fileName.endsWith(EXTENSION)
     })
     return files;
@@ -86,6 +86,8 @@ public fun decode(src: File, des: File, progress: (Long?, Float?) -> Unit, resul
     AsyncTaskCompat.executeParallel(task, src, des)
     return task
 }
+//磁盘IO速度较快，适当降低回调刷新的阀值
+val LOCAL_REFRESH_INTERVAL = 300
 
 abstract class Task(progress: (Long?, Float?) -> Unit, result: (Result?) -> Unit) : AsyncTask<File, Long, Result>() {
     var progressBlock: (Long?, Float?) -> Unit
@@ -122,7 +124,7 @@ abstract class Task(progress: (Long?, Float?) -> Unit, result: (Result?) -> Unit
                             }
                             outputStream.write(buffer, 0, length)
                             readLength += length.toLong()
-                            if (System.currentTimeMillis() - timestamp >= 1000) {
+                            if (System.currentTimeMillis() - timestamp >= LOCAL_REFRESH_INTERVAL) {
                                 timestamp = System.currentTimeMillis()
                                 publishProgress(readLength, totalLength)
                             }
@@ -159,7 +161,7 @@ val ONE_MB = ONE_KB * ONE_KB
 val ONE_GB = ONE_KB * ONE_MB
 
 public fun getReadableSize(bytes: Double): String {
-    val df = java.text.DecimalFormat("#.00")
+    val df = DecimalFormat("#.00")
     var fileSizeString = ""
     if (bytes < ONE_KB) {
         fileSizeString = df.format(bytes) + "B"

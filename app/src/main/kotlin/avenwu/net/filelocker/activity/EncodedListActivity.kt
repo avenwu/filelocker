@@ -1,4 +1,4 @@
-package avenwu.net.filelocker
+package avenwu.net.filelocker.activity
 
 import android.content.Intent
 import android.graphics.Rect
@@ -12,6 +12,11 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import avenwu.net.filelocker.*
+import avenwu.net.filelocker.util.FileItem
+import avenwu.net.filelocker.util.getEncodeFileList
+import avenwu.net.filelocker.util.getNormalFileList
+import avenwu.net.filelocker.util.openFolder
 import java.util.*
 import kotlin.collections.forEach
 

@@ -1,4 +1,4 @@
-package avenwu.net.filelocker
+package avenwu.net.filelocker.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
